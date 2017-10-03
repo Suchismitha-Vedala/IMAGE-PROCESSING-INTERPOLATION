@@ -9,7 +9,7 @@ __version__ = "1.0.0"
 
 import cv2
 import sys
-from resize import resample as rs
+from .resize import resample as rs
 from datetime import datetime
 
 
