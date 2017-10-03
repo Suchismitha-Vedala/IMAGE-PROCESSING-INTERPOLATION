@@ -7,7 +7,8 @@ class binary_image:
         takes as input:
         image: a grey scale image
         returns a histogram"""
-
+        img=cv2.imread(image,0)
+        w,h=img.shape
         hist = [0]*256
         for i in range(w):
             for j in range(h):
@@ -55,9 +56,22 @@ class binary_image:
         take as input
         image: an grey scale image
         returns: a binary image"""
+        img=cv2.imread(image,0)
+        w,h=img.shape
+        new_img=np.zeros((w,h),np.uint8)
+        #FIND OPTIMAL THRESHOLD OF IMAGE
+        H=compute_histogram(self, image)
+        optimal = find_optimal_threshold(self, H)
+        for i in range(w):
+            for j in range(h):
+                if (img[i,j]>=optimal):
+                    new_img[i,j]=255
+                else:
+                    new_img[i,j]=0
+        
+        
+        
 
-        bin_img = image.copy()
-
-        return bin_img
+        return new_img
 
 

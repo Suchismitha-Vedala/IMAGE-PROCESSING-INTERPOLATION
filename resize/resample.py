@@ -56,6 +56,39 @@ class resample:
             for j in range(new_h):
                 x1=int((np.floor(i/fx)))
                 x2=int((np.ceil(i/fx)))
+                if(x1 == x2):
+                    x1=x2-1
+                y1=int((np.floor(j/fy)))
+                y2=int((np.ceil(j/fy)))
+                if(y1 == y2):
+                    y1=y2-1
+                if(y2==h):
+                    y2=h-1
+                    y1=h-2
+                if(x2==w):
+                    x2=w-1
+                    x1=w-2
+                x=int(i/fx)
+                y=int(j/fy)
+                xi=x
+                I1=img[x1][y1][:]
+                I2=img[x2][y1][:]
+                I3=img[x1][y2][:]
+                I4=img[x2][y2][:]
+                
+                pt1=(x1,y1,I1)
+                pt2=(x2,y1,I2)
+                pt3=(x1,y2,I3)
+                pt4=(x2,y2,I4)
+                unknown=(x,y)
+                b[j,i,:]=I=interpolation().bilinear_interpolation(pt1,pt2,pt3,pt4,unknown)
+                
+                
+        '''
+        for i in range(new_w):
+            for j in range(new_h):
+                x1=int((np.floor(i/fx)))
+                x2=int((np.ceil(i/fx)))
                 if (x1 == 0):
                     x1=1
                 x= 0
@@ -73,6 +106,6 @@ class resample:
                 I6 = ((I4*y)+(I2*(1-y))) 
                 b[j,i,:] = ((I6*x)+(I5*(1-x)))
     
-
-        return B
+        '''
+        return b
 
