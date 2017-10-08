@@ -12,17 +12,16 @@ class cell_counting:
         image: binary image
         return: a list of regions"""
         regions = dict()
-        new_img = cv2.imread(image,0)
-        w,h=new_img.shape
+        
+        w,h=image.shape
         img=np.zeros((w,h),np.uint8)
-        H=binary_image().compute_histogram(image)
-        optimal=binary_image().find_optimal_threshold(H)
+        
         for i in range(w):
             for j in range(h):
-                if (new_img[i,j]>=optimal):
-                    img[i,j]=0
-                else:
+                if (image[i,j]==0):
                     img[i,j]=255
+                elif(image[i,j]==255):
+                    img[i,j]=0
         k=1
         R=np.zeros((w,h),np.uint32)
         for j in range(h):
@@ -77,30 +76,38 @@ class cell_counting:
 
         return regions
 
-    def compute_statistics(self, region):
+    def compute_statistics(self, regions):
         """Compute cell statistics area and location
         takes as input
         region: a list of pixels in a region
         returns: area"""
-        regions=blob_coloring(image)
-        region_statistics=dict()
-        stats=[]
+
         centroid=[]
+        stats=[]
+        region_statistics=dict()
         for k,v in regions.iteritems():
+            cent=[]
+            xc=yc=0
+            x_cord=[]
+            y_cord=[]
             l=len(v)
-            area=l
-            x_cord=[v[i][0] for i in range(len(v))]
-            y_cord =[v[i][1] for i in range(len(v))]
-            xc=(sum(x_cord))/l
-            yc=(sum(y_cord))/l
+            x_cord=[v[i][0] for i in range(l)]
+            y_cord =[v[j][1] for j in range(l)]
+            xc=int((sum(x_cord))/l)
+            yc=int((sum(y_cord))/l)
             cent=[xc,yc]
             centroid.append(cent)
             area=l
             stats.append([area,cent])
             region_statistics[k]=[area,cent]
-            print "Region:",k,"  Area:",len(v),"  Centroid:",[xc,yc]
             
-            
+        statistic_area=dict()
+        i=0
+        for k,v in region_statistics.iteritems():
+            if(v[0]>15):
+                statistic_area[k]=v
+                print 'Region', k, 'Area', v[0], 'Centroid', v[1]
+    
 
 
 
@@ -108,7 +115,7 @@ class cell_counting:
         # <region number>: <location or center>, <area>
         # print(stats)
 
-        return region_statistics
+        return region_statistics,statistic_area
 
     def mark_regions_image(self, image, stats):
         """Creates a new image with computed stats
@@ -116,10 +123,28 @@ class cell_counting:
         image: a list of pixels in a region
         stats: stats regarding location and area
         returns: image marked with center and area"""
-        for a in stats.keys():
-        cv2.putText(image, '*' + repr(a) + ',' + repr(stats[a][0]), (int(stats[a][1][1]), int(stats[a][1][0])), cv2.FONT_HERSHEY_SIMPLEX, 0.25, 100)
+        w,h=image.shape
+        img=np.zeros((w,h),np.uint8)
+        
+        for i in range(w):
+            for j in range(h):
+                if (image[i,j]==0):
+                    img[i,j]=255
+                elif(image[i,j]==255):
+                    img[i,j]=0
+        x_cord=[]
+        y_cord=[]
+        ar=[]
+        for k,v in stats.iteritems():
+            
+            x_cord.append(v[1][0])
+            y_cord.append(v[1][1])
+            ar.append(v[0])
+     
+        for q in range(len(ar)):
+                      line='*'+str(ar[q])+","+str(q)
+                      cv2.putText(img, line , ((y_cord[q]), (x_cord[q])), cv2.FONT_HERSHEY_SIMPLEX, 0.25, 60)
 
 
-
-        return image
+        return img
 

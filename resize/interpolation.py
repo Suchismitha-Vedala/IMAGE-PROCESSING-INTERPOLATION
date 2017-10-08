@@ -19,14 +19,11 @@ class interpolation:
         y=unknown[1]
         x1=pt1[0]
         x2=pt2[0]
-        y1=pt1[1]
-        y2=pt2[1]
-        I=(((x2-x)/(x2-x1))*I1)+(((x-x1)/(x2-x1))*I2)
+        denom=x2-x1
+        I=(((x2-x)/denom)*I1)+(((x-x1)/denom)*I2)
         return I
 
         #Write your code for linear interpolation here
-
-        return 0
 
     def bilinear_interpolation(self, pt1, pt2, pt3, pt4, unknown):
         """Computes the linear interpolation for the unknown values using pt1 and pt2
@@ -37,15 +34,18 @@ class interpolation:
         pt2: known point pt4 and f(pt4) or intensity value
         unknown: take and unknown location
         return the f(unknown) or intentity at unknown"""
-        I1=linear_interpolation(pt1,pt2,unknown)
-        I2=linear_interpolation(pt3,pt4,unknown)
+        I11=self.linear_interpolation(pt1,pt2,unknown)
+        I12=self.linear_interpolation(pt3,pt4,unknown)
         y1=pt1[1]
-        y2=pt1[1]
+        y2=pt3[1]
         y=unknown[1]
-        I=((y2-y)/(y2-y1))*I1)+(((y-y1)/(y2-y1))*I2)
+        denom=y2-y1
+        
+        
+        I33=(((y2-y)/denom)*I11)+(((y-y1)/denom)*I12)
         
 
         # Write your code for bilinear interpolation here
         # May be you can reuse or call linear interpolatio method to compute this task
 
-        return I
+        return I33

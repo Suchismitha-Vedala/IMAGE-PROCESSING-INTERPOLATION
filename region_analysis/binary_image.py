@@ -35,23 +35,16 @@ class binary_image:
             s=s+(i*hist[i])
         p=0
         for j in range(t_in):
-            p=p+hist[t_in]
-        e1=s/p
+            p=p+hist[j]
+        e1=float(s/p)
         s1=0
         for i in range(t_in,256):
             s1=s1+(i*hist[i])
         p1=0
         for j in range(t_in,256):
-            p1=p1+hist[t_in]
-        e2=s1/p1
-        E1=[]
-        for i in range(t_in):
-            E1.append((i*hist[i])/e1)
-        E2=[]
-        for i in range(t_in,256):
-            E2.append((i*hist[i])/e2)
-        optimal=(np.float(sum(E1)) / max(len(E1), 1)  + np.float(sum(E2)) / max(len(E2), 1))/2
-
+            p1=p1+hist[j]
+        e2=float(s1/p1)
+        optimal=(e1+e2)/2
 
         return optimal
 
@@ -64,8 +57,8 @@ class binary_image:
         w,h=img.shape
         new_img=np.zeros((w,h),np.uint8)
         #FIND OPTIMAL THRESHOLD OF IMAGE
-        H=compute_histogram(self, image)
-        optimal = find_optimal_threshold(self, H)
+        H=self.compute_histogram(image)
+        optimal = self.find_optimal_threshold(H)
         for i in range(w):
             for j in range(h):
                 if (img[i,j]>=optimal):

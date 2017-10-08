@@ -9,7 +9,9 @@ __version__ = "1.0.0"
 
 import cv2
 import sys
-from .resize import resample as rs
+sys.path.insert(0, '/Users/suchi/Desktop/Fall 2017/DIP/GIt/resize')
+import resample as rs
+import numpy as np
 from datetime import datetime
 
 
@@ -81,13 +83,19 @@ def main():
 
 
     resample_obj = rs.resample()
-    resampled_image = resample_obj.resize(input_image, fx=fx, fy=fy, interpolation=interpolation)
+    resampled_image = resample_obj.resize(args.image, fx=fx, fy=fy, interpolation=interpolation)
 
     #Write output file
-    outputDir = 'output/resize/'
-
-    output_image_name = outputDir+image_name+interpolation+datetime.now().strftime("%m%d-%H%M%S")+".jpg"    
-    cv2.imwrite(output_image_name, resampled_image)
+    outputDir = "./output/resize/1/"
+    display_image=(interpolation,resampled_image)
+    print outputDir+image_name+interpolation+datetime.now().strftime("%m%d-%H%M%S")+".jpg"
+    op=outputDir+image_name+"_"+interpolation+"_"+datetime.now().strftime("%m%d-%H%M%S")+".jpg"
+    opt=outputDir+image_name+"_"+interpolation+"_"+datetime.now().strftime("%m%d-%H%M%S")+".txt"
+    #output_image_name = outputDir+image_name+interpolation+datetime.now().strftime("%m%d-%H%M%S")+".jpg"    
+    cv2.imwrite(op,  resampled_image)
+    #np.savetxt(opt, resampled_image)
+    with open(opt, 'wb') as f:
+        np.savetxt(f, np.column_stack(resampled_image),fmt='%s')
 
 
 if __name__ == "__main__":

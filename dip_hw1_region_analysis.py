@@ -8,14 +8,15 @@ __email__ = "pmantini@uh.edu"
 __version__ = "1.0.0"
 
 import cv2
+import numpy as np
 import sys
 from datetime import datetime
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
-
-from region_analysis import binary_image as bi
-from region_analysis import cell_counting as cc
+sys.path.insert(0, '/Users/suchi/Desktop/Fall 2017/DIP/GIt/region_analysis')
+import binary_image as bi
+import cell_counting as cc
 
 def display_image(window_name, image):
     """A function to display image"""
@@ -45,14 +46,12 @@ def main():
         sys.exit(2)
     else:
         image_name = args.image.split(".")[0]
-        input_image = cv2.imread(args.image, 0)
+        input_image = cv2.imread(args.image,0)
 
 
     bin_img = bi.binary_image()
-    hist = bin_img.compute_histogram(input_image)
-
-    outputDir = 'output/cellct/'
-
+    hist = bin_img.compute_histogram(args.image)
+    outputDir = "./output/cellct/"
     #Saving histogram to output directory    
     hist_fig = plt.plot(hist)
     plt.savefig(outputDir+"hist.png")
@@ -60,7 +59,7 @@ def main():
     threshold = bin_img.find_optimal_threshold(hist)
     print("Optimal threshold: ", threshold)
 
-    binary_img = bin_img.binarize(input_image)
+    binary_img = bin_img.binarize(args.image)
     output_image_name = outputDir + "binary_image_" + datetime.now().strftime("%m%d-%H%M%S") + ".jpg"
     cv2.imwrite(output_image_name, binary_img)
 
@@ -69,12 +68,16 @@ def main():
     cell_count_obj = cc.cell_counting()
 
     regions = cell_count_obj.blob_coloring(binary_img)
-    stats = cell_count_obj.compute_statistics(regions)
+    stats,minstats = cell_count_obj.compute_statistics(regions)
 
 
     cell_stats_img = cell_count_obj.mark_regions_image(binary_img, stats)
     output_image_name = outputDir + "cell_stats_" + datetime.now().strftime("%m%d-%H%M%S") + ".jpg"
+    opt = outputDir + "cell_stats_" + datetime.now().strftime("%m%d-%H%M%S") + ".txt"
     cv2.imwrite(output_image_name, cell_stats_img)
+    with open(opt, 'wb') as f:
+        np.savetxt(f, np.column_stack(minstats),fmt='%s')
+
 
 
 
