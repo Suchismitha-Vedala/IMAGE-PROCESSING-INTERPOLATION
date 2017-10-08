@@ -14,7 +14,7 @@ from datetime import datetime
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
-sys.path.insert(0, '/Users/suchi/Desktop/Fall 2017/DIP/GIt/region_analysis')
+sys.path.insert(0, './region_analysis')
 import binary_image as bi
 import cell_counting as cc
 

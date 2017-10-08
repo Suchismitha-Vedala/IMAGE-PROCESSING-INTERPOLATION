@@ -9,7 +9,7 @@ __version__ = "1.0.0"
 
 import cv2
 import sys
-sys.path.insert(0, '/Users/suchi/Desktop/Fall 2017/DIP/GIt/resize')
+sys.path.insert(0, './resize')
 import resample as rs
 import numpy as np
 from datetime import datetime
@@ -88,7 +88,7 @@ def main():
     #Write output file
     outputDir = "./output/resize/1/"
     display_image=(interpolation,resampled_image)
-    print outputDir+image_name+interpolation+datetime.now().strftime("%m%d-%H%M%S")+".jpg"
+    #print outputDir+image_name+interpolation+datetime.now().strftime("%m%d-%H%M%S")+".jpg"
     op=outputDir+image_name+"_"+interpolation+"_"+datetime.now().strftime("%m%d-%H%M%S")+".jpg"
     opt=outputDir+image_name+"_"+interpolation+"_"+datetime.now().strftime("%m%d-%H%M%S")+".txt"
     #output_image_name = outputDir+image_name+interpolation+datetime.now().strftime("%m%d-%H%M%S")+".jpg"    
