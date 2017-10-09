@@ -67,7 +67,7 @@ class resample:
         w1=w
         h1=h
         l=float(fx)
-        m=float(fy)
+        m=float(fy) #fx,fy are in string format
         new_w=int(l*w)
         new_h=int(m*h)
         print w,h,new_w,new_h

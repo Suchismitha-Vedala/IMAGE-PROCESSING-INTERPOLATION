@@ -29,23 +29,30 @@ class binary_image:
         returns: an optimal threshold value"""
 
         threshold = 0
+        l=[]
         t_in=int(255/2)
-        s=0
-        for i in range(t_in):
-            s=s+(i*hist[i])
-        p=0
-        for j in range(t_in):
-            p=p+hist[j]
-        e1=float(s/p)
-        s1=0
-        for i in range(t_in,256):
-            s1=s1+(i*hist[i])
-        p1=0
-        for j in range(t_in,256):
-            p1=p1+hist[j]
-        e2=float(s1/p1)
-        optimal=(e1+e2)/2
-
+        l.append(t_in)
+        while((len(l) == len(set(l)))==True):
+            s=0
+            for i in range(t_in):
+                s=s+(i*hist[i])
+            p=0
+            for j in range(t_in):
+                p=p+hist[j]
+            e1=float(s/p)
+            s1=0
+            for i in range(t_in,256):
+                s1=s1+(i*hist[i])
+            p1=0
+            for j in range(t_in,256):
+                p1=p1+hist[j]
+            e2=float(s1/p1)
+            e=(e1+e2)/2
+            l.append(e)
+            t_in=int(e)
+        
+        optimal=l[len(l)-1]
+        
         return optimal
 
     def binarize(self, image):
